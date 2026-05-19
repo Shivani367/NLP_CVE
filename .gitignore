@@ -4,8 +4,8 @@ venv/
 ENV/
 .env
 
-# Large model binaries & metrics
-trained_models/
+# Large public zero-shot model binary (1.63 GB, automatically downloaded)
+trained_models/bart_large_mnli/
 bert_cve_finetuned/
 
 # Databases
@@ -29,3 +29,8 @@ __pycache__/
 
 # Notebook checkpoints
 .ipynb_checkpoints/
+
+# Intermediate model training checkpoints and optimizer states
+**/checkpoint-*/
+*.pt
+*.bin
