@@ -1,0 +1,31 @@
+# Virtual environment
+cve/
+venv/
+ENV/
+.env
+
+# Large model binaries & metrics
+trained_models/
+bert_cve_finetuned/
+
+# Databases
+*.db
+cve_research.db
+
+# Python compilation files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Notebook checkpoints
+.ipynb_checkpoints/

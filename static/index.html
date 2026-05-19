@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVE NLP Threat Intelligence Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="dark-theme">
+    <!-- Main Shell Layout -->
+    <div class="app-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="glow-icon">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>THREAT<span>INTEL</span></h2>
+                    <p>NLP & MARKOV SEC ENGINE</p>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="overview">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    <span>Vulnerability Center</span>
+                </button>
+                <button class="nav-item" data-tab="analytics">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Trend Analytics</span>
+                </button>
+                <button class="nav-item" data-tab="forecasting">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                    <span>Time-Series Forecast</span>
+                </button>
+                <button class="nav-item" data-tab="hmm-memm">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><path d="M2 12h20"></path></svg>
+                    <span>Markov Sequences</span>
+                </button>
+                <button class="nav-item" data-tab="explorer">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>CVE DB Explorer</span>
+                </button>
+                <button class="nav-item" data-tab="models">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <span>Model Engine Config</span>
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="pulse-dot green"></span>
+                    <span id="server-status-text">Server: Connected</span>
+                </div>
+                <div class="db-version">cve_research.db · SQLite</div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-wrapper">
+            
+            <!-- Global Top Bar -->
+            <header class="topbar">
+                <div class="page-title">
+                    <h1 id="tab-heading">Vulnerability Center</h1>
+                    <p id="tab-subheading">Live threat scanning, rule-based NER extraction, and CVSS score regression</p>
+                </div>
+                <div class="topbar-actions">
+                    <button class="btn btn-secondary btn-icon" id="quick-refresh-btn">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                    </button>
+                    <div class="system-time" id="live-time">12:30:00 PM</div>
+                </div>
+            </header>
+
+            <!-- Global KPI Cards Row -->
+            <section class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon blue">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    </div>
+                    <div class="kpi-details">
+                        <h3>Total CVEs</h3>
+                        <p class="kpi-val" id="kpi-total-cves">-</p>
+                        <span class="kpi-sub">Analyzed & In DB</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon red">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                    </div>
+                    <div class="kpi-details">
+                        <h3>High / Critical</h3>
+                        <p class="kpi-val" id="kpi-critical-cves">-</p>
+                        <span class="kpi-sub">CVSS Score &ge; 7.0</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon yellow">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+                    </div>
+                    <div class="kpi-details">
+                        <h3>Average CVSS</h3>
+                        <p class="kpi-val" id="kpi-avg-cvss">-</p>
+                        <span class="kpi-sub">Database Severity Mean</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon green">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                    </div>
+                    <div class="kpi-details">
+                        <h3>Active Threat State</h3>
+                        <p class="kpi-val" id="kpi-active-threat">-</p>
+                        <span class="kpi-sub">Markov Sequence Decoded</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dynamic Tab Content Panels -->
+            <div class="tab-content-container">
+                
+                <!-- 1. TAB: OVERVIEW -->
+                <div class="tab-panel active" id="panel-overview">
+                    <div class="overview-grid">
+                        
+                        <!-- Search & Query Panel -->
+                        <div class="card glass-card query-card">
+                            <div class="card-header border-glow">
+                                <h3>CVE Query Analyzer</h3>
+                                <span class="badge badge-info">NVD API v2.0</span>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-desc">Enter any valid CVE ID (1988 - Present) to fetch its details from the official National Vulnerability Database, clean the content, run rule-based NER extraction, and score severity via the Random Forest model.</p>
+                                
+                                <div class="search-form">
+                                    <div class="input-glow-wrapper">
+                                        <input type="text" id="cve-search-input" placeholder="e.g. CVE-2021-44228" value="CVE-2021-44228">
+                                    </div>
+                                    <button class="btn btn-primary" id="cve-submit-btn">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                        <span>Analyze</span>
+                                    </button>
+                                </div>
+                                <div id="lookup-error-message" class="alert alert-error hidden"></div>
+                                <div id="lookup-success-message" class="alert alert-success hidden"></div>
+                                
+                                <div class="quick-examples">
+                                    <span>Try Examples:</span>
+                                    <button class="badge badge-example" data-cve="CVE-2017-0144">CVE-2017-0144 (EternalBlue)</button>
+                                    <button class="badge badge-example" data-cve="CVE-2021-44228">CVE-2021-44228 (Log4Shell)</button>
+                                    <button class="badge badge-example" data-cve="CVE-2021-34527">CVE-2021-34527 (PrintNightmare)</button>
+                                    <button class="badge badge-example" data-cve="CVE-2023-38831">CVE-2023-38831 (WinRAR)</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scan Detailed Report Card (Dynamic) -->
+                        <div class="card glass-card report-card hidden" id="cve-report-card">
+                            <!-- Populated dynamically via javascript -->
+                        </div>
+                        
+                        <!-- Initial placeholder state -->
+                        <div class="card glass-card placeholder-card" id="cve-placeholder-card">
+                            <div class="placeholder-content">
+                                <svg viewBox="0 0 24 24" width="64" height="64" stroke="currentColor" stroke-width="1.5" fill="none" class="pulse-icon">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <h3>Scan Engine Ready</h3>
+                                <p>Perform a CVE lookup in the query panel to extract structured assets and threat parameters.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 2. TAB: TREND ANALYTICS -->
+                <div class="tab-panel" id="panel-analytics">
+                    <div class="analytics-grid">
+                        
+                        <div class="card glass-card">
+                            <div class="card-header">
+                                <h3>Exploit Vector Breakdown</h3>
+                                <span class="badge badge-sec">NER Classification</span>
+                            </div>
+                            <div class="card-body chart-container">
+                                <canvas id="chart-exploits"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card glass-card">
+                            <div class="card-header">
+                                <h3>Top Affected Components</h3>
+                                <span class="badge badge-sec">Asset NER</span>
+                            </div>
+                            <div class="card-body chart-container">
+                                <canvas id="chart-components"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card glass-card span-2">
+                            <div class="card-header">
+                                <h3>CVSS Base Score Distribution</h3>
+                                <span class="badge badge-sec">Database Density</span>
+                            </div>
+                            <div class="card-body chart-container-large">
+                                <canvas id="chart-cvss-dist"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 3. TAB: TIME-SERIES FORECASTING -->
+                <div class="tab-panel" id="panel-forecasting">
+                    <div class="forecast-layout">
+                        
+                        <div class="card glass-card span-2">
+                            <div class="card-header">
+                                <h3>Vulnerability Volume Forecast (2017 - 2028)</h3>
+                                <span class="badge badge-sec">ARIMA &amp; Linear Regression Models</span>
+                            </div>
+                            <div class="card-body chart-container-large">
+                                <canvas id="chart-forecast"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="forecast-side-panel">
+                            <div class="card glass-card">
+                                <div class="card-header">
+                                    <h3>Yearly Volume Trend Details</h3>
+                                </div>
+                                <div class="card-body no-padding table-wrapper-small">
+                                    <table class="grid-table" id="forecast-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Year</th>
+                                                <th>Observed Volume</th>
+                                                <th>ARIMA Prediction</th>
+                                                <th>Linear Trend</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Dynamically populated -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="card glass-card model-metrics-card">
+                                <div class="card-header">
+                                    <h3>Time-Series Parameters</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="parameter-row">
+                                        <span class="param-label">ARIMA Configuration:</span>
+                                        <span class="param-val">ARIMA(1, 1, 0)</span>
+                                    </div>
+                                    <div class="parameter-row">
+                                        <span class="param-label">Stationarity:</span>
+                                        <span class="param-val">First-order Differenced</span>
+                                    </div>
+                                    <div class="parameter-row">
+                                        <span class="param-label">Regression solver:</span>
+                                        <span class="param-val">Ordinary Least Squares (OLS)</span>
+                                    </div>
+                                    <p class="param-desc">ARIMA captures short-term autocorrelation trends in security disclosures, while the linear model maps the secular long-term acceleration of discovery rates.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 4. TAB: MARKOV SEQUENCES -->
+                <div class="tab-panel" id="panel-hmm-memm">
+                    <div class="markov-grid">
+                        
+                        <!-- Chronological HMM threat states scatter -->
+                        <div class="card glass-card span-2">
+                            <div class="card-header">
+                                <h3>Chronological Threat State Clustering (Viterbi Decoded)</h3>
+                                <span class="badge badge-sec">Gaussian Hidden Markov Model</span>
+                            </div>
+                            <div class="card-body chart-container-large">
+                                <canvas id="chart-hmm-sequence"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Live Forecast Card -->
+                        <div class="card glass-card transition-card">
+                            <div class="card-header">
+                                <h3>Markov Threat-State Forecast</h3>
+                                <span class="badge badge-glow">Next-State Simulation</span>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="current-state-box">
+                                    <p class="box-label">CURRENT THREAT LEVEL</p>
+                                    <div class="state-glowing-text" id="hmm-current-state">MEDIUM THREAT</div>
+                                    <p class="box-sub" id="hmm-last-cvss">Last Observed CVSS: 7.2</p>
+                                </div>
+                                
+                                <div class="arrow-down">
+                                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                                </div>
+
+                                <div class="next-state-box">
+                                    <p class="box-label">PREDICTED NEXT THREAT LEVEL</p>
+                                    <div class="state-glowing-text-large" id="hmm-predicted-state">HIGH THREAT</div>
+                                    <p class="box-sub" id="hmm-probability">Transition Probability: 84.6%</p>
+                                    <p class="box-sub" id="hmm-expected-cvss">Expected next CVSS score: 8.52</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Heatmap Transition Matrix -->
+                        <div class="card glass-card">
+                            <div class="card-header">
+                                <h3>HMM Transition Probabilities</h3>
+                                <span class="badge badge-sec">State-to-State</span>
+                            </div>
+                            <div class="card-body transition-matrix-container">
+                                <div class="matrix-grid">
+                                    <div class="matrix-cell label">From / To</div>
+                                    <div class="matrix-cell label text-center">Low Threat</div>
+                                    <div class="matrix-cell label text-center">Medium Threat</div>
+                                    <div class="matrix-cell label text-center">High Threat</div>
+                                    
+                                    <div class="matrix-cell row-label">Low Threat</div>
+                                    <div class="matrix-cell val" id="t-0-0">0.00</div>
+                                    <div class="matrix-cell val" id="t-0-1">0.00</div>
+                                    <div class="matrix-cell val" id="t-0-2">0.00</div>
+                                    
+                                    <div class="matrix-cell row-label">Medium Threat</div>
+                                    <div class="matrix-cell val" id="t-1-0">0.00</div>
+                                    <div class="matrix-cell val" id="t-1-1">0.00</div>
+                                    <div class="matrix-cell val" id="t-1-2">0.00</div>
+                                    
+                                    <div class="matrix-cell row-label">High Threat</div>
+                                    <div class="matrix-cell val" id="t-2-0">0.00</div>
+                                    <div class="matrix-cell val" id="t-2-1">0.00</div>
+                                    <div class="matrix-cell val" id="t-2-2">0.00</div>
+                                </div>
+                                <div class="matrix-explanation">
+                                    <p>Identified Threat State Means (Gaussian Centroids):</p>
+                                    <ul>
+                                        <li><strong>Low Threat:</strong> Mean CVSS = <span id="mean-low">-</span></li>
+                                        <li><strong>Medium Threat:</strong> Mean CVSS = <span id="mean-med">-</span></li>
+                                        <li><strong>High Threat:</strong> Mean CVSS = <span id="mean-high">-</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Maximum Entropy Model Sequential Simulation -->
+                        <div class="card glass-card span-2 memm-card">
+                            <div class="card-header border-glow">
+                                <h3>MEMM Transition Simulator</h3>
+                                <span class="badge badge-info">Maximum Entropy Markov Model</span>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-desc">Unlike HMMs which are purely generative, the <strong>Maximum Entropy Markov Model (MEMM)</strong> uses a discriminative Logistic Regression transition model. It combines the current observation ($o_t$) with the previous state ($s_{t-1}$) to predict the probability distribution of the next state.</p>
+                                
+                                <div class="simulator-controls">
+                                    <div class="sim-slider-group">
+                                        <label for="memm-cvss-slider">Simulate next observed CVSS Score: <span id="memm-cvss-val">8.5</span></label>
+                                        <input type="range" id="memm-cvss-slider" min="1.0" max="10.0" step="0.1" value="8.5" class="slider">
+                                    </div>
+                                    
+                                    <div class="sim-result-box">
+                                        <div class="sim-prediction">
+                                            <p>PREDICTED STATE</p>
+                                            <h4 id="memm-predicted-label">HIGH THREAT</h4>
+                                        </div>
+                                        <div class="sim-probability-bars">
+                                            <div class="bar-row">
+                                                <span class="bar-label">Low Threat:</span>
+                                                <div class="bar-track"><div class="bar-fill" id="fill-low" style="width: 10%;"></div></div>
+                                                <span class="bar-percent" id="pct-low">10.0%</span>
+                                            </div>
+                                            <div class="bar-row">
+                                                <span class="bar-label">Medium Threat:</span>
+                                                <div class="bar-track"><div class="bar-fill" id="fill-med" style="width: 20%;"></div></div>
+                                                <span class="bar-percent" id="pct-med">20.0%</span>
+                                            </div>
+                                            <div class="bar-row">
+                                                <span class="bar-label">High Threat:</span>
+                                                <div class="bar-track"><div class="bar-fill" id="fill-high" style="width: 70%;"></div></div>
+                                                <span class="bar-percent" id="pct-high">70.0%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 5. TAB: DATABASE EXPLORER -->
+                <div class="tab-panel" id="panel-explorer">
+                    <div class="explorer-card card glass-card">
+                        
+                        <div class="card-header explorer-header">
+                            <h3>SQLite Vulnerability Vault</h3>
+                            <div class="explorer-actions">
+                                <button class="btn btn-secondary btn-icon-text" id="export-csv-btn">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    <span>Export CSV</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Data Filtering Controls -->
+                        <div class="filter-bar">
+                            <div class="search-box">
+                                <input type="text" id="explorer-search" placeholder="Search ID, description or component...">
+                            </div>
+                            <div class="select-box-wrapper">
+                                <select id="filter-severity">
+                                    <option value="ALL">All Severities</option>
+                                    <option value="CRITICAL">Critical Severity</option>
+                                    <option value="HIGH">High Severity</option>
+                                    <option value="MEDIUM">Medium Severity</option>
+                                    <option value="LOW">Low Severity</option>
+                                </select>
+                            </div>
+                            <div class="select-box-wrapper">
+                                <select id="filter-exploit">
+                                    <option value="ALL">All Exploit Types</option>
+                                    <option value="RCE">Remote Code Execution (RCE)</option>
+                                    <option value="XSS">Cross-Site Scripting (XSS)</option>
+                                    <option value="SQLi">SQL Injection (SQLi)</option>
+                                    <option value="Buffer Overflow">Buffer Overflow</option>
+                                    <option value="Privilege Escalation">Privilege Escalation</option>
+                                    <option value="DoS">Denial of Service (DoS)</option>
+                                    <option value="Command Injection">Command Injection</option>
+                                    <option value="Info Disclosure">Info Disclosure</option>
+                                    <option value="Auth Bypass">Auth Bypass</option>
+                                    <option value="Path Traversal">Path Traversal</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic DB Grid Table -->
+                        <div class="table-wrapper">
+                            <table class="grid-table" id="cve-explorer-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 130px;">CVE ID</th>
+                                        <th style="width: 80px;" class="text-center">Year</th>
+                                        <th style="width: 90px;" class="text-center">CVSS Score</th>
+                                        <th style="width: 110px;" class="text-center">Severity</th>
+                                        <th style="width: 140px;">Exploit Type</th>
+                                        <th style="width: 150px;">Component</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populated dynamically via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- DB Pagination -->
+                        <div class="pagination-footer">
+                            <span class="pagination-info" id="explorer-info-text">Showing 0-0 of 0 entries</span>
+                            <div class="pagination-buttons">
+                                <button class="btn btn-secondary btn-icon" id="explorer-prev-btn" disabled>
+                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                </button>
+                                <button class="btn btn-secondary btn-icon" id="explorer-next-btn" disabled>
+                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 6. TAB: MODELS ENGINE CONFIG -->
+                <div class="tab-panel" id="panel-models">
+                    <div class="models-layout">
+                        
+                        <div class="card glass-card">
+                            <div class="card-header border-glow">
+                                <h3>Machine Learning Engines</h3>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-desc text-margin">Run the core statistical models locally on the host database records. Re-fitting updates the Random Forest Regressor tree weights, Viterbi state sequences in the HMM, and Logistic Regression decision boundaries in the MEMM transition classifier.</p>
+                                
+                                <!-- Re-train ALL models -->
+                                <div class="models-action-box">
+                                    <button class="btn btn-primary btn-large" id="btn-retrain-models">
+                                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" class="rotate-icon"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                                        <span>Re-train All Models</span>
+                                    </button>
+                                    <span class="btn-subtext" id="last-train-status">Status: Models cached and ready</span>
+                                </div>
+
+                                <!-- Individual model training buttons -->
+                                <div class="individual-train-grid">
+                                    <div class="individual-train-card">
+                                        <div class="individual-train-header">
+                                            <span class="model-badge badge-rf">RF</span>
+                                            <h5>Random Forest Regressor</h5>
+                                        </div>
+                                        <p class="model-desc">TF-IDF + RF for CVSS score prediction</p>
+                                        <button class="btn btn-secondary btn-small" id="btn-train-rf">
+                                            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" class="rotate-icon"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                                            <span>Train RF</span>
+                                        </button>
+                                        <span class="btn-subtext individual-status" id="status-rf">Ready</span>
+                                    </div>
+                                    <div class="individual-train-card">
+                                        <div class="individual-train-header">
+                                            <span class="model-badge badge-hmm">HMM</span>
+                                            <h5>Hidden Markov Model</h5>
+                                        </div>
+                                        <p class="model-desc">Gaussian HMM for threat state sequences</p>
+                                        <button class="btn btn-secondary btn-small" id="btn-train-hmm">
+                                            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" class="rotate-icon"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                                            <span>Train HMM</span>
+                                        </button>
+                                        <span class="btn-subtext individual-status" id="status-hmm">Ready</span>
+                                    </div>
+                                    <div class="individual-train-card">
+                                        <div class="individual-train-header">
+                                            <span class="model-badge badge-memm">MEMM</span>
+                                            <h5>Max Entropy Markov Model</h5>
+                                        </div>
+                                        <p class="model-desc">Logistic Regression transition classifier</p>
+                                        <button class="btn btn-secondary btn-small" id="btn-train-memm">
+                                            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" class="rotate-icon"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                                            <span>Train MEMM</span>
+                                        </button>
+                                        <span class="btn-subtext individual-status" id="status-memm">Ready</span>
+                                    </div>
+                                    <div class="individual-train-card">
+                                        <div class="individual-train-header">
+                                            <span class="model-badge badge-bert">BERT</span>
+                                            <h5>DistilBERT Fine-Tune</h5>
+                                        </div>
+                                        <p class="model-desc">Fine-tune on ag_news dataset (2 epochs)</p>
+                                        <button class="btn btn-secondary btn-small" id="btn-train-bert">
+                                            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" class="rotate-icon"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                                            <span>Fine-Tune BERT</span>
+                                        </button>
+                                        <span class="btn-subtext individual-status" id="status-bert">Ready</span>
+                                    </div>
+                                </div>
+
+                                <div class="ml-scores-grid">
+                                    <div class="ml-score-tile">
+                                        <h4>Random Forest Regressor</h4>
+                                        <p class="tile-val" id="model-score-mae">-</p>
+                                        <span class="tile-label">Mean Absolute Error (MAE)</span>
+                                    </div>
+                                    <div class="ml-score-tile">
+                                        <h4>Random Forest Regressor</h4>
+                                        <p class="tile-val" id="model-score-rmse">-</p>
+                                        <span class="tile-label">Root Mean Squared Error (RMSE)</span>
+                                    </div>
+                                    <div class="ml-score-tile">
+                                        <h4>Maximum Entropy Model (MEMM)</h4>
+                                        <p class="tile-val" id="model-score-memm">-</p>
+                                        <span class="tile-label">In-Sample State Prediction Accuracy</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card glass-card">
+                            <div class="card-header">
+                                <h3>Database Controls &amp; API Keys</h3>
+                            </div>
+                            <div class="card-body">
+                                <h4 class="settings-title">Third-Party LLM Enhancement (Optional)</h4>
+                                <p class="card-desc text-margin">Provide an Anthropic or OpenAI API key to enrich threat descriptions with cognitive security logs and explanations. Leave blank to run purely local and offline rule-based extraction.</p>
+                                
+                                <div class="settings-form">
+                                    <div class="input-glow-wrapper settings-input">
+                                        <input type="password" id="api-key-anthropic" placeholder="Anthropic API Key (sk-ant-...)">
+                                    </div>
+                                    <div class="input-glow-wrapper settings-input">
+                                        <input type="password" id="api-key-openai" placeholder="OpenAI API Key (sk-proj-...)">
+                                    </div>
+                                    <button class="btn btn-secondary" id="btn-save-keys">Save Credentials</button>
+                                </div>
+
+                                <hr class="card-divider">
+
+                                <h4 class="settings-title text-danger">Danger Zone</h4>
+                                <p class="card-desc text-margin">Wipe the active SQLite database file clean. This deletes all custom lookups and resets the storage to the factory seed list of 100 historical CVE entries.</p>
+                                
+                                <button class="btn btn-danger" id="btn-reset-database">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                    <span>Reset Database &amp; Reload Seeds</span>
+                                </button>
+                                <div id="reset-success-message" class="alert alert-success hidden text-margin"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    
+    <script src="/js/app.js"></script>
+</body>
+</html>
