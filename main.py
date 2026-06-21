@@ -513,7 +513,13 @@ app.mount("/", StaticFiles(directory="static"), name="static")
 # ==============================================================================
 # 6. EXECUTION RUNNER
 # ==============================================================================
-
 if __name__ == "__main__":
-    print("[+] Starting local FastAPI server on http://localhost:8000...")
-    uvicorn.run(app, host="127.0.0.1", port=8000, reload=False)
+    port = int(os.environ.get("PORT", 7860))
+
+    print(f"[+] Starting FastAPI server on port {port}...")
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=port,
+        reload=False
+    )
