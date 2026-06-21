@@ -516,4 +516,4 @@ app.mount("/", StaticFiles(directory="static"), name="static")
 
 if __name__ == "__main__":
     print("[+] Starting local FastAPI server on http://localhost:8000...")
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run(app, host="127.0.0.1", port=8000, reload=False)
