@@ -1,3 +1,29 @@
+---
+
+title: CVE Threat Intelligence Dashboard
+emoji: 🛡️
+colorFrom: blue
+colorTo: red
+sdk: streamlit
+app_file: app.py
+pinned: false
+license: mit
+short_description: AI-powered CVE vulnerability analysis using DistilBERT, BART, spaCy NER, and CVSS severity prediction.
+tags:
+
+* cybersecurity
+* nlp
+* machine-learning
+* transformers
+* distilbert
+* bart
+* threat-intelligence
+* vulnerability-analysis
+
+---
+
+
+
 # CVE Threat Intelligence Dashboard 🛡️
 
 A modern, high-performance, and offline-capable SIEM Threat Intelligence Dashboard that analyzes, predicts, and logs Common Vulnerabilities and Exposures (CVE) severity and categories. The application utilizes a combination of classical machine learning and advanced NLP transformer models to automate vulnerability classification.
